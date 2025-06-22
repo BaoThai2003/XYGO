@@ -79,4 +79,66 @@ if (window.location.pathname.includes('xygxlt.html')) {
             }
         ]
     };
+
+    //giai doan giai
+    function renderTournament() {
+        const stagesContainer = document.getElementById('tournament-stages');
+        const ol = document.createElement('ol');
+        
+        tournament.stages.forEach(stage => {
+            const li = document.createElement('li');
+            const strong = document.createElement('strong');
+            strong.textContent = stage.name;
+            li.appendChild(strong);
+            
+            const ul = document.createElement('ul');
+            stage.details.forEach(detail => {
+                const detailLi = document.createElement('li');
+                const strongDetail = document.createElement('strong');
+                strongDetail.textContent = detail.title + ': ';
+                detailLi.appendChild(strongDetail);
+                
+                if (typeof detail.content === 'string') {
+                    detailLi.appendChild(document.createTextNode(detail.content));
+                } else if (Array.isArray(detail.content)) {
+                    const subUl = document.createElement('ul');
+                    detail.content.forEach(item => {
+                        const subLi = document.createElement('li');
+                        subLi.textContent = item;
+                        subUl.appendChild(subLi);
+                    });
+                    detailLi.appendChild(subUl);
+                }
+                
+                if (detail.subDetails) {
+                    const subUl = document.createElement('ul');
+                    detail.subDetails.forEach(subDetail => {
+                        const subDetailLi = document.createElement('li');
+                        const strongSubDetail = document.createElement('strong');
+                        strongSubDetail.textContent = subDetail.title + ':';
+                        subDetailLi.appendChild(strongSubDetail);
+                        
+                        const subSubUl = document.createElement('ul');
+                        subDetail.content.forEach(item => {
+                            const subSubLi = document.createElement('li');
+                            subSubLi.textContent = item;
+                            subSubUl.appendChild(subSubLi);
+                        });
+                        subDetailLi.appendChild(subSubUl);
+                        subUl.appendChild(subDetailLi);
+                    });
+                    detailLi.appendChild(subUl);
+                }
+                
+                ul.appendChild(detailLi);
+            });
+            
+            li.appendChild(ul);
+            ol.appendChild(li);
+        });
+        
+        stagesContainer.appendChild(ol);
+    }
+
+
 }

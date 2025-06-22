@@ -20,20 +20,28 @@ try {
     } elseif ($action == 'add') {
         $data = json_decode(file_get_contents('php://input'), true);
         $name = isset($data['name']) ? trim($data['name']) : '';
-        if ($name) {
-            $stmt = $pdo->prepare('INSERT INTO players (name) VALUES (?)');
-            $stmt->execute([$name]);
+        $group = isset($data['group']) ? trim($data['group']) : '';
+        $wins = isset($data['wins']) ? (int)$data['wins'] : 0;
+        $tiebreaker = isset($data['tiebreaker']) ? (float)$data['tiebreaker'] : 0.0;
+
+        if ($name && in_array($group, ['Obelisk Blue', 'Ra Yellow', 'Slifer Red'])) {
+            $stmt = $pdo->prepare('INSERT INTO players (name, group_name, wins, tiebreaker) VALUES (?, ?, ?, ?)');
+            $stmt->execute([$name, $group, $wins, $tiebreaker]);
             echo json_encode(['success' => true]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Tên không được để trống']);
+            echo json_encode(['success' => false, 'message' => 'Tên hoặc nhóm không hợp lệ']);
         }
     } elseif ($action == 'update') {
         $data = json_decode(file_get_contents('php://input'), true);
         $id = isset($data['id']) ? (int)$data['id'] : 0;
         $name = isset($data['name']) ? trim($data['name']) : '';
-        if ($id && $name) {
-            $stmt = $pdo->prepare('UPDATE players SET name = ? WHERE id = ?');
-            $stmt->execute([$name, $id]);
+        $group = isset($data['group']) ? trim($data['group']) : '';
+        $wins = isset($data['wins']) ? (int)$data['wins'] : 0;
+        $tiebreaker = isset($data['tiebreaker']) ? (float)$data['tiebreaker'] : 0.0;
+
+        if ($id && $name && in_array($group, ['Obelisk Blue', 'Ra Yellow', 'Slifer Red'])) {
+            $stmt = $pdo->prepare('UPDATE players SET name = ?, group_name = ?, wins = ?, tiebreaker = ? WHERE id = ?');
+            $stmt->execute([$name, $group, $wins, $tiebreaker, $id]);
             echo json_encode(['success' => true]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Dữ liệu không hợp lệ']);

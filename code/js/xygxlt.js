@@ -80,7 +80,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
         ]
     };
 
-    //giai doan giai
+    // Giai doan giai
     function renderTournament() {
         const stagesContainer = document.getElementById('tournament-stages');
         const ol = document.createElement('ol');
@@ -140,32 +140,46 @@ if (window.location.pathname.includes('xygxlt.html')) {
         stagesContainer.appendChild(ol);
     }
 
-    //hien thi nguoi choi
+    // Hien thi thong tin nguoi choi
     function fetchPlayers() {
         fetch('players.php?action=get')
             .then(response => response.json())
-            .then(data => {
-                const playerList = document.getElementById('playerList');
-                playerList.innerHTML = '';
-                data.forEach(player => {
+            .then(players => {
+                const groups = {
+                    'Obelisk Blue': document.getElementById('obeliskBlueList'),
+                    'Ra Yellow': document.getElementById('raYellowList'),
+                    'Slifer Red': document.getElementById('sliferRedList')
+                };
+
+                Object.keys(groups).forEach(group => {
+                    groups[group].innerHTML = '';
+                });
+
+                players.forEach(player => {
                     const li = document.createElement('li');
                     li.innerHTML = `
-                        ${player.name}
+                        ${player.name} (Thắng: ${player.wins}, Hệ số: ${player.tiebreaker})
                         <div>
-                            <button class="edit-btn" onclick="editPlayer(${player.id}, '${player.name}')">Chỉnh sửa</button>
+                            <button class="edit-btn" onclick="editPlayer(${player.id}, '${player.name}', '${player.group}', ${player.wins})">Chỉnh sửa</button>
                             <button class="delete-btn" onclick="deletePlayer(${player.id})">Xóa</button>
                         </div>
                     `;
-                    playerList.appendChild(li);
+                    groups[player.group].appendChild(li);
                 });
+
+                calculateStage1Results(players);
             })
             .catch(error => console.error('Error fetching players:', error));
     }
 
-    //them nguoi choi
+    // Chinh sua nguoi choi
     function addOrUpdatePlayer() {
         const id = document.getElementById('playerId').value;
         const name = document.getElementById('playerName').value.trim();
+        const group = document.getElementById('playerGroup').value;
+        const wins = parseInt(document.getElementById('playerWins').value) || 0;
+        const tiebreaker = parseFloat(document.getElementById('playerTiebreaker').value) || 0.0;
+
         if (!name) {
             alert('Vui lòng nhập tên người chơi!');
             return;
@@ -175,14 +189,17 @@ if (window.location.pathname.includes('xygxlt.html')) {
         fetch(`players.php?action=${action}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, name })
+            body: JSON.stringify({ id, name, group, wins, tiebreaker })
         })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     fetchPlayers();
                     document.getElementById('playerName').value = '';
+                    document.getElementById('playerGroup').value = 'Obelisk Blue';
+                    document.getElementById('playerWins').value = '';
                     document.getElementById('playerId').value = '';
+                    document.getElementById('playerTiebreaker').value = '';
                 } else {
                     alert(data.message);
                 }
@@ -190,36 +207,127 @@ if (window.location.pathname.includes('xygxlt.html')) {
             .catch(error => console.error('Error:', error));
     }
 
-    //chinh sua nguoi choi
-    function editPlayer(id, name){
+    // Chinh nguoi choi
+    function editPlayer(id, name, group, wins) {
         document.getElementById('playerId').value = id;
-        document.getElementsByName('playerName').value = name;
+        document.getElementById('playerName').value = name;
+        document.getElementById('playerGroup').value = group;
+        document.getElementById('playerWins').value = wins;
     }
 
-    //xoa nguoi choi
-    function deletePlayer(id){
-        if(confirm('Bạn có chắc muốn xóa người chơi này ?')){
-            fetch(`player.php?action=delete`,{
+    // Xoa nguoi choi
+    function deletePlayer(id) {
+        if (confirm('Bạn có chắc muốn xóa người chơi này?')) {
+            fetch(`players.php?action=delete`, {
                 method: 'POST',
-                headers:{ 'CONTENT TYPE': 'application/json'},
-                body : JSON.stringify({id})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
             })
-            .then (response => response.json())
-            .then (data => {
-                if (data.success){
-                    fetchPlayers();
-                } else{
-                    alert(data.message);
-                }
-            })
-            .catch(error => console.error('Error:', error));
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        fetchPlayers();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         }
     }
 
-    //khoi tao trang
-    function init(){
+    // Tinh diem Vong 1
+    function calculateStage1Results(players) {
+        // Tinh diem group
+        const groupPoints = {
+            'Obelisk Blue': 0,
+            'Ra Yellow': 0,
+            'Slifer Red': 0
+        };
+
+        const groupPlayers = {
+            'Obelisk Blue': [],
+            'Ra Yellow': [],
+            'Slifer Red': []
+        };
+
+        players.forEach(player => {
+            groupPoints[player.group] += player.wins;
+            groupPlayers[player.group].push(player);
+        });
+
+        // Hien thi hang
+        const groupRankings = Object.keys(groupPoints).sort((a, b) => groupPoints[b] - groupPoints[a]);
+
+        // Hien thi bang xep hang
+        const groupRankingsDiv = document.getElementById('group-rankings');
+        groupRankingsDiv.innerHTML = `<p>${groupRankings.map((group, index) => `${index + 1}. ${group}: ${groupPoints[group]} điểm`).join('<br>')}</p>`;
+
+        // Loc nguoi choi theo thanh tich
+        Object.keys(groupPlayers).forEach(group => {
+            groupPlayers[group].sort((a, b) => {
+                if (b.wins === a.wins) {
+                    return b.tiebreaker - a.tiebreaker;
+                }
+                return b.wins - a.wins;
+            });
+        });
+
+        // Vao vong trong cua nhom thang
+        const topGroup = groupRankings[0];
+        let toChallenge = [];
+        let toPlayIn = [];
+        let eliminated = [];
+
+        // Group win
+        groupPlayers[topGroup].forEach((player, index) => {
+            if (index < 6 || (index >= 6 && player.wins >= 5)) {
+                toChallenge.push(player.name);
+            } else {
+                toPlayIn.push(player);
+            }
+        });
+
+        // Xem xet 2 group con lai
+        const otherGroups = groupRankings.slice(1);
+        let otherPlayers = [];
+        otherGroups.forEach(group => {
+            otherPlayers = otherPlayers.concat(groupPlayers[group]);
+        });
+
+        // Loc nguoi choi
+        otherPlayers.sort((a, b) => {
+            if (b.wins === a.wins) {
+                if (b.tiebreaker === a.tiebreaker) {
+                    const aGroupRank = groupRankings.indexOf(a.group);
+                    const bGroupRank = groupRankings.indexOf(b.group);
+                    return aGroupRank - bGroupRank;
+                }
+                return b.tiebreaker - a.tiebreaker;
+            }
+            return b.wins - a.wins;
+        });
+
+        // Top 4 vô Challenge
+        toChallenge = toChallenge.concat(otherPlayers.slice(0, 4).map(p => p.name));
+
+        // Play-in
+        const playInCount = toPlayIn.length === 2 ? 10 : 8;
+        toPlayIn = toPlayIn.concat(otherPlayers.slice(4, 4 + playInCount));
+
+        // top 4 chot bang loai
+        eliminated = otherPlayers.slice(4 + playInCount).map(p => p.name);
+
+        // hien thi ket qua
+        document.getElementById('toChallenge').textContent = toChallenge.join(', ');
+        document.getElementById('toPlayIn').textContent = toPlayIn.map(p => p.name).join(', ');
+        document.getElementById('eliminated').textContent = eliminated.join(', ');
+    }
+
+    // khoi tao trang
+    function init() {
         renderTournament();
         fetchPlayers();
     }
+
     init();
 }

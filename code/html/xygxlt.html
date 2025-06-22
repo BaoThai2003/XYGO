@@ -48,10 +48,34 @@
                     <option value="Ra Yellow">Ra Yellow</option>
                     <option value="Slifer Red">Slifer Red</option>
                 </select>
-                <input type="number" id="playerWins" placeholder="Số trận thắng" min="0">
                 <input type="hidden" id="playerId">
-                <Input type="hidden" id="playerTiebreaker">
                 <button onclick="addOrUpdatePlayer()">Thêm/Chỉnh sửa</button>
+            </div>
+            <h3>Lịch Thi Đấu</h3>
+            <div class="match-schedule">
+                <select id="stageFilter">
+                    <option value="all">Tất cả giai đoạn</option>
+                    <option value="stage1">Giai đoạn 1</option>
+                    <option value="playIn">Vòng Play-in</option>
+                    <option value="challenge">Vòng Thử Thách</option>
+                    <option value="playOff">Vòng Play-off</option>
+                </select>
+                <button onclick="generateSchedule()">Tạo Lịch Thi Đấu</button>
+                <ul class="match-list" id="matchSchedule"></ul>
+            </div>
+            <h3>Lịch Sử Thành Tích</h3>
+            <div class="match-history">
+                <select id="historyGroupFilter">
+                    <option value="all">Tất cả nhóm</option>
+                    <option value="Obelisk Blue">Obelisk Blue</option>
+                    <option value="Ra Yellow">Ra Yellow</option>
+                    <option value="Slifer Red">Slifer Red</option>
+                </select>
+                <select id="historyPlayerFilter">
+                    <option value="all">Tất cả người chơi</option>
+                </select>
+                <button onclick="fetchMatchHistory()">Lọc</button>
+                <ul class="match-list" id="matchHistory"></ul>
             </div>
             <h3>Danh Sách Người Chơi</h3>
             <div id="group-standings">
@@ -62,8 +86,8 @@
                 <h4>Slifer Red</h4>
                 <ul class="player-list" id="sliferRedList"></ul>
             </div>
-            <h3>Kết Quả Giai Đoạn 1</h3>
-            <div id="stage1-results">
+            <h3>Kết Quả Giai Đoạn</h3>
+            <div id="stage-results">
                 <h4>Xếp Hạng Nhóm</h4>
                 <div id="group-rankings"></div>
                 <h4>Thí Sinh Tiến Vào Các Vòng</h4>

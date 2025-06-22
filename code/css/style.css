@@ -78,17 +78,19 @@ body {
 .player-management h3 {
     color: #2c3e50;
 }
-.player-form {
+.player-form, .match-schedule, .match-history {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 20px;
+    align-items: center;
 }
-.player-form input, .player-form select {
+.player-form input, .player-form select, .match-schedule select, .match-history select, .match-schedule input {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
-.player-form button {
+.player-form button, .match-schedule button, .match-history button {
     padding: 8px 16px;
     background-color: #3498db;
     color: #fff;
@@ -96,8 +98,23 @@ body {
     border-radius: 4px;
     cursor: pointer;
 }
-.player-form button:hover {
+.player-form button:hover, .match-schedule button:hover, .match-history button:hover {
     background-color: #2980b9;
+}
+.match-list {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+.match-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.match-list input {
+    width: 60px;
 }
 .player-list {
     list-style: none;
@@ -134,10 +151,10 @@ body {
     color: #2c3e50;
     margin-top: 20px;
 }
-#stage1-results {
+#stage-results {
     margin-top: 20px;
 }
-#stage1-results p {
+#stage-results p {
     margin: 10px 0;
 }
 footer {

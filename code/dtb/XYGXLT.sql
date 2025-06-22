@@ -20,5 +20,9 @@ SET default_table_access_method = heap;
 
 CREATE TABLE players (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
+    name VARCHAR(255) NOT NULL UNIQUE,
+    group_name VARCHAR(50) NOT NULL,
+    wins INTEGER DEFAULT 0,
+    tiebreaker FLOAT DEFAULT 0.0,
+    CONSTRAINT valid_group CHECK (group_name IN ('Obelisk Blue', 'Ra Yellow', 'Slifer Red'))
 );

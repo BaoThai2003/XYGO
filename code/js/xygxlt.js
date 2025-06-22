@@ -80,7 +80,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
         ]
     };
 
-    // Giai doan giai
+    // Render tournament stages
     function renderTournament() {
         const stagesContainer = document.getElementById('tournament-stages');
         const ol = document.createElement('ol');
@@ -140,7 +140,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
         stagesContainer.appendChild(ol);
     }
 
-    // Hien thi thong tin nguoi choi
+    // Fetch and display players by group
     function fetchPlayers() {
         fetch('players.php?action=get')
             .then(response => response.json())
@@ -172,7 +172,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
             .catch(error => console.error('Error fetching players:', error));
     }
 
-    // Chinh sua nguoi choi
+    // Add or update player
     function addOrUpdatePlayer() {
         const id = document.getElementById('playerId').value;
         const name = document.getElementById('playerName').value.trim();
@@ -207,7 +207,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
             .catch(error => console.error('Error:', error));
     }
 
-    // Chinh nguoi choi
+    // Edit player
     function editPlayer(id, name, group, wins) {
         document.getElementById('playerId').value = id;
         document.getElementById('playerName').value = name;
@@ -215,7 +215,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
         document.getElementById('playerWins').value = wins;
     }
 
-    // Xoa nguoi choi
+    // Delete player
     function deletePlayer(id) {
         if (confirm('Bạn có chắc muốn xóa người chơi này?')) {
             fetch(`players.php?action=delete`, {
@@ -235,9 +235,9 @@ if (window.location.pathname.includes('xygxlt.html')) {
         }
     }
 
-    // Tinh diem Vong 1
+    // Calculate Stage 1 results
     function calculateStage1Results(players) {
-        // Tinh diem group
+        // Calculate group points
         const groupPoints = {
             'Obelisk Blue': 0,
             'Ra Yellow': 0,
@@ -255,14 +255,14 @@ if (window.location.pathname.includes('xygxlt.html')) {
             groupPlayers[player.group].push(player);
         });
 
-        // Hien thi hang
+        // Sort groups by total points
         const groupRankings = Object.keys(groupPoints).sort((a, b) => groupPoints[b] - groupPoints[a]);
 
-        // Hien thi bang xep hang
+        // Display group rankings
         const groupRankingsDiv = document.getElementById('group-rankings');
         groupRankingsDiv.innerHTML = `<p>${groupRankings.map((group, index) => `${index + 1}. ${group}: ${groupPoints[group]} điểm`).join('<br>')}</p>`;
 
-        // Loc nguoi choi theo thanh tich
+        // Sort players within each group by wins and tiebreaker
         Object.keys(groupPlayers).forEach(group => {
             groupPlayers[group].sort((a, b) => {
                 if (b.wins === a.wins) {
@@ -272,13 +272,13 @@ if (window.location.pathname.includes('xygxlt.html')) {
             });
         });
 
-        // Vao vong trong cua nhom thang
+        // Determine advancing players
         const topGroup = groupRankings[0];
         let toChallenge = [];
         let toPlayIn = [];
         let eliminated = [];
 
-        // Group win
+        // Top group processing
         groupPlayers[topGroup].forEach((player, index) => {
             if (index < 6 || (index >= 6 && player.wins >= 5)) {
                 toChallenge.push(player.name);
@@ -287,14 +287,14 @@ if (window.location.pathname.includes('xygxlt.html')) {
             }
         });
 
-        // Xem xet 2 group con lai
+        // Other two groups processing
         const otherGroups = groupRankings.slice(1);
         let otherPlayers = [];
         otherGroups.forEach(group => {
             otherPlayers = otherPlayers.concat(groupPlayers[group]);
         });
 
-        // Loc nguoi choi
+        // Sort other players by wins and tiebreaker, with group priority
         otherPlayers.sort((a, b) => {
             if (b.wins === a.wins) {
                 if (b.tiebreaker === a.tiebreaker) {
@@ -307,23 +307,23 @@ if (window.location.pathname.includes('xygxlt.html')) {
             return b.wins - a.wins;
         });
 
-        // Top 4 vô Challenge
+        // Top 4 from other groups go to Challenge
         toChallenge = toChallenge.concat(otherPlayers.slice(0, 4).map(p => p.name));
 
-        // Play-in
+        // Next 8 (or 10) go to Play-in
         const playInCount = toPlayIn.length === 2 ? 10 : 8;
         toPlayIn = toPlayIn.concat(otherPlayers.slice(4, 4 + playInCount));
 
-        // top 4 chot bang loai
+        // Bottom 4 are eliminated
         eliminated = otherPlayers.slice(4 + playInCount).map(p => p.name);
 
-        // hien thi ket qua
+        // Display results
         document.getElementById('toChallenge').textContent = toChallenge.join(', ');
         document.getElementById('toPlayIn').textContent = toPlayIn.map(p => p.name).join(', ');
         document.getElementById('eliminated').textContent = eliminated.join(', ');
     }
 
-    // khoi tao trang
+    // Initialize the page
     function init() {
         renderTournament();
         fetchPlayers();

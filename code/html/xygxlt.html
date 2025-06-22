@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XYGO GX Legacy Tournament</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <ul>
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="hof.html">Hall of Fame</a></li>
+            <li><a href="link.html">Link</a></li>
+            <li><a href="tour.html" class="active">Giải Đấu</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="tournament-section" id="xygxlt">
+            <h2>XYGO GX Legacy Tournament (XYGXLT)</h2>
+            <h3>Cách Thức Thi Đấu</h3>
+            <div id="tournament-stages"></div>
+        </div>
+        <div class="player-management">
+            <h3>Quản Lý Người Chơi</h3>
+            <div class="player-form">
+                <input type="text" id="playerName" placeholder="Tên người chơi">
+                <input type="hidden" id="playerId">
+                <button onclick="addOrUpdatePlayer()">Thêm/Chỉnh sửa</button>
+            </div>
+            <ul class="player-list" id="playerList"></ul>
+        </div>
+    </div>
+    <footer>
+        <a href="https://facebook.com" target="_blank">Facebook</a>
+        <a href="https://messenger.com" target="_blank">Messenger</a>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

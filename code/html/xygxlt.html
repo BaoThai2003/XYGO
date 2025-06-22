@@ -43,10 +43,34 @@
             <h3>Quản Lý Người Chơi</h3>
             <div class="player-form">
                 <input type="text" id="playerName" placeholder="Tên người chơi">
+                <select id="playerGroup">
+                    <option value="Obelisk Blue">Obelisk Blue</option>
+                    <option value="Ra Yellow">Ra Yellow</option>
+                    <option value="Slifer Red">Slifer Red</option>
+                </select>
+                <input type="number" id="playerWins" placeholder="Số trận thắng" min="0">
                 <input type="hidden" id="playerId">
+                <Input type="hidden" id="playerTiebreaker">
                 <button onclick="addOrUpdatePlayer()">Thêm/Chỉnh sửa</button>
             </div>
-            <ul class="player-list" id="playerList"></ul>
+            <h3>Danh Sách Người Chơi</h3>
+            <div id="group-standings">
+                <h4>Obelisk Blue</h4>
+                <ul class="player-list" id="obeliskBlueList"></ul>
+                <h4>Ra Yellow</h4>
+                <ul class="player-list" id="raYellowList"></ul>
+                <h4>Slifer Red</h4>
+                <ul class="player-list" id="sliferRedList"></ul>
+            </div>
+            <h3>Kết Quả Giai Đoạn 1</h3>
+            <div id="stage1-results">
+                <h4>Xếp Hạng Nhóm</h4>
+                <div id="group-rankings"></div>
+                <h4>Thí Sinh Tiến Vào Các Vòng</h4>
+                <p><strong>Vòng Thử Thách:</strong> <span id="toChallenge"></span></p>
+                <p><strong>Vòng Play-in:</strong> <span id="toPlayIn"></span></p>
+                <p><strong>Bị Loại:</strong> <span id="eliminated"></span></p>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>

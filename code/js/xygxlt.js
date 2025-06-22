@@ -140,5 +140,26 @@ if (window.location.pathname.includes('xygxlt.html')) {
         stagesContainer.appendChild(ol);
     }
 
+    //hien thi nguoi choi
+    function fetchPlayers() {
+        fetch('players.php?action=get')
+            .then(response => response.json())
+            .then(data => {
+                const playerList = document.getElementById('playerList');
+                playerList.innerHTML = '';
+                data.forEach(player => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        ${player.name}
+                        <div>
+                            <button class="edit-btn" onclick="editPlayer(${player.id}, '${player.name}')">Chỉnh sửa</button>
+                            <button class="delete-btn" onclick="deletePlayer(${player.id})">Xóa</button>
+                        </div>
+                    `;
+                    playerList.appendChild(li);
+                });
+            })
+            .catch(error => console.error('Error fetching players:', error));
+    }
 
 }

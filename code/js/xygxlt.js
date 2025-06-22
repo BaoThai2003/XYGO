@@ -162,4 +162,31 @@ if (window.location.pathname.includes('xygxlt.html')) {
             .catch(error => console.error('Error fetching players:', error));
     }
 
+    //them nguoi choi
+    function addOrUpdatePlayer() {
+        const id = document.getElementById('playerId').value;
+        const name = document.getElementById('playerName').value.trim();
+        if (!name) {
+            alert('Vui lòng nhập tên người chơi!');
+            return;
+        }
+
+        const action = id ? 'update' : 'add';
+        fetch(`players.php?action=${action}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, name })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    fetchPlayers();
+                    document.getElementById('playerName').value = '';
+                    document.getElementById('playerId').value = '';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
 }

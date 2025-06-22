@@ -80,20 +80,78 @@
             <h3>Danh Sách Người Chơi</h3>
             <div id="group-standings">
                 <h4>Obelisk Blue</h4>
-                <ul class="player-list" id="obeliskBlueList"></ul>
+                <table class="player-table" id="obeliskBlueTable">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Điểm</th>
+                            <th>Hiệu số phụ</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
                 <h4>Ra Yellow</h4>
-                <ul class="player-list" id="raYellowList"></ul>
+                <table class="player-table" id="raYellowTable">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Điểm</th>
+                            <th>Hiệu số phụ</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
                 <h4>Slifer Red</h4>
-                <ul class="player-list" id="sliferRedList"></ul>
+                <table class="player-table" id="sliferRedTable">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Điểm</th>
+                            <th>Hiệu số phụ</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
             <h3>Kết Quả Giai Đoạn</h3>
             <div id="stage-results">
                 <h4>Xếp Hạng Nhóm</h4>
-                <div id="group-rankings"></div>
+                <table class="group-ranking-table" id="groupRankings">
+                    <thead>
+                        <tr>
+                            <th>Hạng</th>
+                            <th>Nhóm</th>
+                            <th>Điểm tổng</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
                 <h4>Thí Sinh Tiến Vào Các Vòng</h4>
-                <p><strong>Vòng Thử Thách:</strong> <span id="toChallenge"></span></p>
-                <p><strong>Vòng Play-in:</strong> <span id="toPlayIn"></span></p>
-                <p><strong>Bị Loại:</strong> <span id="eliminated"></span></p>
+                <table class="advancing-table" id="advancingPlayers">
+                    <thead>
+                        <tr>
+                            <th>Vòng</th>
+                            <th>Danh sách thí sinh</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Vòng Thử Thách</td>
+                            <td id="toChallenge"></td>
+                        </tr>
+                        <tr>
+                            <td>Vòng Play-in</td>
+                            <td id="toPlayIn"></td>
+                        </tr>
+                        <tr>
+                            <td>Bị Loại</td>
+                            <td id="eliminated"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

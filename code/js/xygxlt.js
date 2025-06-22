@@ -148,7 +148,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
 
     // Fetch and display players by group
     function fetchPlayers() {
-        fetch('players.php?action=get')
+        fetch('/code/php/players.php?action=get')
             .then(response => response.json())
             .then(players => {
                 allPlayers = players;
@@ -332,7 +332,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
         }
 
         // Update match and players
-        fetch('players.php?action=updateMatch', {
+        fetch('/code/php/players.php?action=updateMatch', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -389,7 +389,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
                 });
             });
 
-            fetch('players.php?action=createMatches', {
+            fetch('/code/php/players.php?action=createMatches', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(matches)
@@ -468,7 +468,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
             if (rounds && round >= rounds) break;
         }
 
-        fetch('players.php?action=createMatches', {
+        fetch('/code/php/players.php?action=createMatches', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(matches)
@@ -497,7 +497,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
             });
         }
 
-        fetch('players.php?action=createMatches', {
+        fetch('/code/php/players.php?action=createMatches', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(matches)
@@ -515,7 +515,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
     // Update Swiss standings
     function updateSwissStandings(stage) {
         const players = stage === 'playIn' ? playInPlayers : challengePlayers;
-        fetch('players.php?action=getMatches&status=completed&stage=' + stage)
+        fetch('/code/php/players.php?action=getMatches&status=completed&stage=' + stage)
             .then(response => response.json())
             .then(matches => {
                 const standings = players.map(p => ({
@@ -556,7 +556,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
 
     // Update Play-off bracket
     function updatePlayOffBracket() {
-        fetch('players.php?action=getMatches&status=completed&stage=playOff')
+        fetch('/code/php/players.php?action=getMatches&status=completed&stage=playOff')
             .then(response => response.json())
             .then(matches => {
                 let winners = [];
@@ -571,7 +571,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
                         { player1_id: winners[0].id, player2_id: winners[1].id, stage: 'playOff' },
                         { player1_id: winners[2].id, player2_id: winners[3].id, stage: 'playOff' }
                     ];
-                    fetch('players.php?action=createMatches', {
+                    fetch('/code/php/players.php?action=createMatches', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(semiMatches)
@@ -579,7 +579,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
                 } else if (winners.length === 2) {
                     // Final
                     let finalMatch = [{ player1_id: winners[0].id, player2_id: winners[1].id, stage: 'playOff' }];
-                    fetch('players.php?action=createMatches', {
+                    fetch('/code/php/players.php?action=createMatches', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(finalMatch)
@@ -592,7 +592,7 @@ if (window.location.pathname.includes('xygxlt.html')) {
 
     // Calculate stage results
     function calculateStageResults() {
-        fetch('players.php?action=get')
+        fetch('/code/php/players.php?action=get')
             .then(response => response.json())
             .then(players => {
                 // Calculate group points

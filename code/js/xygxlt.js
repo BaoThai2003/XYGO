@@ -189,4 +189,10 @@ if (window.location.pathname.includes('xygxlt.html')) {
             })
             .catch(error => console.error('Error:', error));
     }
+
+    //chinh sua nguoi choi
+    function editPlayer(id, name){
+        document.getElementById('playerId').value = id;
+        document.getElementsByName('playerName').value = name;
+    }
 }

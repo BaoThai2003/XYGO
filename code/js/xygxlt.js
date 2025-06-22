@@ -195,4 +195,24 @@ if (window.location.pathname.includes('xygxlt.html')) {
         document.getElementById('playerId').value = id;
         document.getElementsByName('playerName').value = name;
     }
+
+    //xoa nguoi choi
+    function deletePlayer(id){
+        if(confirm('Bạn có chắc muốn xóa người chơi này ?')){
+            fetch(`player.php?action=delete`,{
+                method: 'POST',
+                headers:{ 'CONTENT TYPE': 'application/json'},
+                body : JSON.stringify({id})
+            })
+            .then (response => response.json())
+            .then (data => {
+                if (data.success){
+                    fetchPlayers();
+                } else{
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    }
 }

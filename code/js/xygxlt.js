@@ -215,4 +215,11 @@ if (window.location.pathname.includes('xygxlt.html')) {
             .catch(error => console.error('Error:', error));
         }
     }
+
+    //khoi tao trang
+    function init(){
+        renderTournament();
+        fetchPlayers();
+    }
+    init();
 }
